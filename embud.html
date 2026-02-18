@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimas Dwi Pangestu - Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'); /* Gambar kafe tenang dari Unsplash */
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            min-height: 200vh; /* Membuat body lebih panjang untuk scroll */
+        }
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 30px;
+        }
+        .hamburger div {
+            width: 30px;
+            height: 3px;
+            background-color: white;
+            transition: 0.3s;
+        }
+        .sidebar {
+            position: fixed;
+            left: -200px; /* Hidden by default */
+            top: 0;
+            width: 200px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            box-sizing: border-box;
+            transition: left 0.3s;
+            z-index: 999;
+            overflow-y: auto; /* Agar bisa scroll jika konten panjang */
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 20px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            color: #BB782F;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 80px; /* Memberi ruang untuk hamburger */
+        }
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px; /* Jarak dari nama */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            background-image: url('yourphoto.jpg'); /* Placeholder logo, ganti dengan URL logo Anda */
+            background-size: cover;
+            background-position: center;
+        }
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #4CAF50; /* Cursor hijau */
+            animation: typewriter 3s steps(18) 1s both, blink 0.75s step-end infinite;
+            background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .name::after {
+            content: "Dimas Dwi Pangestu";
+            background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: #01FFAB; }
+        }
+        .description {
+            font-size: 16px;
+            line-height: 1.5;
+            max-width: 600px;
+            color: #01FFAB; /* Warna hijau untuk deskripsi */
+        }
+        section {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .project-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #01FFAB;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #01FFAB;
+        }
+        .explanation {
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+            color: #01FFAB; /* Warna hijau untuk penjelasan proyek */
+        }
+        .food-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .food-item img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+        .food-item h3, .food-item p {
+            color: #01FFAB; /* Warna hijau untuk judul dan deskripsi makanan */
+        }
+        .contact-links {
+            display: flex;
+            flex-direction: column; /* Berurutan ke bawah */
+            align-items: center;
+        }
+        .contact-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            background-color: #4CAF50; /* Warna hijau */
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .contact-links a:hover {
+            background-color: #01FFAB;
+        }
+        /* Skill Bars */
+        .skill {
+            margin-bottom: 15px;
+        }
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .skill-name span {
+            color: #01FFAB; /* Warna hijau untuk nama skill dan persentase */
+        }
+        .skill-bar {
+            background-color: #ddd;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+        }
+        .skill-fill {
+            background-color: #01FFAB;
+            height: 100%;
+            width: 0;
+            border-radius: 10px;
+            animation: fill 2s ease-in-out forwards;
+        }
+        @keyframes fill {
+            to { width: var(--fill); }
+        }
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #01FFAB;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            margin-left: -3px;
+        }
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 100%;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: white;
+            border: 4px solid #01FFAB;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            position: relative;
+            border-radius: 6px;
+        }
+        .timeline-content h3, .timeline-content p {
+            color: #01FFAB; /* Warna hijau untuk judul dan deskripsi pengalaman */
+        }
+        /* Tambahan section untuk membuat scroll panjang */
+        .extra-section {
+            height: 500px; /* Tinggi tambahan */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #01FFAB; /* Warna hijau untuk teks di extra section */
+        }
+    </style>
+</head>
+<body>
+    <div class="hamburger" onclick="toggleSidebar()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="#home" onclick="closeSidebar()">Home</a></li>
+            <li><a href="#projects" onclick="closeSidebar()">Proyek</a></li>
+            <li><a href="#favorites" onclick="closeSidebar()">Favorit</a></li>
+            <li><a href="#contact" onclick="closeSidebar()">Kontak</a></li>
+            <li><a href="#about" onclick="closeSidebar()">Tentang Saya</a></li>
+            <li><a href="#skills" onclick="closeSidebar()">Keahlian</a></li>
+            <li><a href="#experience" onclick="closeSidebar()">Pengalaman</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <header id="home">
+            <div class="logo"></div>
+            <div class="name"></div>
+            <div class="description">
+                Saya adalah seorang mahasiswa yang tertarik dengan teknologi, khususnya pengembangan web dan keamanan siber. Saya sedang belajar HTML, CSS, JavaScript, dan mengikuti kelas Cyber Security untuk meningkatkan pengetahuan saya di bidang ini. Website ini adalah portofolio sederhana untuk menampilkan proyek dan minat saya.
+            </div>
+        </header>
+
+        <section id="projects">
+            <h2>Proyek Saya</h2>
+            <p>Saya sedang mengikuti kelas Cyber Security dan memiliki proyek di HTML, CSS, JS.</p>
+            <div class="project-buttons">
+                <button onclick="toggleExplanation('html')">HTML</button>
+                <button onclick="toggleExplanation('css')">CSS</button>
+                <button onclick="toggleExplanation('js')">JS</button>
+            </div>
+            <div id="html-explanation" class="explanation">
+                <p>HTML (HyperText Markup Language) adalah bahasa markup standar untuk membuat halaman web. Ini digunakan untuk struktur konten web.</p>
+            </div>
+            <div id="css-explanation" class="explanation">
+                <p>CSS (Cascading Style Sheets) digunakan untuk mengatur tampilan dan gaya dari halaman web, seperti warna, font, dan layout.</p>
+            </div>
+            <div id="js-explanation" class="explanation">
+                <p>JavaScript adalah bahasa pemrograman yang digunakan untuk membuat halaman web interaktif, seperti animasi dan respons terhadap aksi pengguna.</p>
+            </div>
+        </section>
+
+        <section id="favorites">
+            <h2>Makanan & Minuman Favorit</h2>
+            <div class="food-item">
+                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Ayam Geprek">
+                <div>
+                    <h3>Ayam Geprek</h3>
+                    <p>Ayam geprek adalah hidangan ayam goreng yang digeprek dan disajikan dengan sambal pedas. Ini favorit saya karena rasanya gurih dan pedas yang pas.</p>
+                </div>
+            </div>
+            <div class="food-item">
+                <img src="nasi-goreng-kencur-kemangi.jpg" alt="Nasi Goreng">
+                <div>
+                    <h3>Nasi Goreng</h3>
+                    <p>Nasi goreng adalah nasi yang digoreng dengan bumbu dan bahan tambahan seperti telur, ayam, atau sayuran. Saya suka karena simpel dan enak.</p>
+                </div>
+            </div>
+            <div class="food-item">
+                <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Kopi">
+                <div>
+                    <h3>Kopi</h3>
+                    <p>Kopi adalah minuman favorit saya untuk memulai hari. Rasanya pahit dan energik, cocok untuk konsentrasi.</p>
+                </div>
+            </div>
+            <div class="food-item">
+                <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Es Teh">
+                <div>
+                    <h3>Es Teh</h3>
+                    <p>Es teh adalah minuman teh dingin yang menyegarkan. Saya suka karena manis dan cocok untuk cuaca panas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="extra-section">
+            <p>Tentang Saya: Saya suka belajar hal baru dan berbagi pengetahuan dengan orang lain. Hobiku adalah coding dan eksplorasi teknologi ,mencari informasi tentang media sosial dan saya mengikuti kelas hacking dan security.</p>
+        </section>
+
+        <section id="skills">
+            <h2>Keahlian</h2>
+            <div class="skill">
+                <div class="skill-name">
+                    <span>HTML</span>
+                    <span>80%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-fill" style="--fill: 80%;"></div>
+                </div>
+            </div>
+            <div class="skill">
+                <div class="skill-name">
+                    <span>CSS</span>
+                    <span>75%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-fill" style="--fill: 75%;"></div>
+                </div>
+            </div>
+            <div class="skill">
+                <div class="skill-name">
+                    <span>JavaScript</span>
+                    <span>60%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-fill" style="--fill: 60%;"></div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2>Pengalaman</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2026 - Sekarang</h3>
+                        <p>Mahasiswa di bidang Teknologi Informasi, fokus pada pengembangan web dan cyber security & cyber hacking.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2024</h3>
+                        <p>Mengikuti kursus online tentang HTML dan CSS, membuat website sederhana pertama.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2023</h3>
+                        <p>Belajar dasar pemrograman dan mulai tertarik dengan teknologi.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Kontak Saya</h2>
+            <div class="contact-links">
+                <a href="https://wa.me/62895404399397">WhatsApp</a>
+                <a href="https://tiktok.com/@mas_destro">TikTok</a>
+                <a href="https://instagram.com/ze_dims">Instagram</a>
+                <a href="https://dimasdestro.vercel.app/">Website AI Saya</a>
+           
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('open');
+        }
+        function toggleExplanation(id) {
+            const explanation = document.getElementById(id + '-explanation');
+            if (explanation.style.display === 'block') {
+                explanation.style.display = 'none';
+            } else {
+                explanation.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
