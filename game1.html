@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+        body { background: #000; color: #fff; font-family: 'Orbitron', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        
+        .grid-container { position: relative; }
+        
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        
+        .cell { 
+            width: 90px; height: 90px; background: #050505; 
+            border: 2px solid #222; display: flex; align-items: center; 
+            justify-content: center; font-size: 2.5rem; font-weight: 900; 
+            cursor: pointer; border-radius: 15px; transition: 0.4s; 
+            position: relative; z-index: 1;
+        }
+        
+        .cell:hover { border-color: #00f2ff; box-shadow: inset 0 0 10px #00f2ff; }
+        .cell.x { color: #00f2ff; text-shadow: 0 0 20px #00f2ff; }
+        .cell.o { color: #ff003c; text-shadow: 0 0 20px #ff003c; }
+
+        /* --- STRIKE LINE ENGINE --- */
+        #strike-line {
+            position: absolute;
+            background: #fff;
+            box-shadow: 0 0 20px #fff;
+            z-index: 10;
+            display: none;
+            border-radius: 10px;
+            transition: all 0.5s ease;
+        }
+
+        .status { margin-bottom: 20px; font-size: 0.7rem; letter-spacing: 3px; color: #444; }
+        .neon-blue { color: #00f2ff; text-shadow: 0 0 10px #00f2ff; }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">LOG: WAITING_FOR_USER...</div>
+    
+    <div class="grid-container">
+        <div id="strike-line"></div>
+        
+        <div class="grid" id="board">
+            <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
+        </div>
+    </div>
+
+    <button onclick="resetGame()" class="mt-10 border-2 border-red-600 text-red-600 px-8 py-2 rounded-xl text-[10px] font-bold hover:bg-red-600 hover:text-white transition-all uppercase">
+        <i class="fas fa-sync-alt mr-2"></i> REBOOT SYSTEM
+    </button>
+
+    <script>
+        let board = ["", "", "", "", "", "", "", "", ""];
+        const player = "X", ai = "O";
+        const cells = document.querySelectorAll('.cell');
+        const statusTxt = document.getElementById('status');
+        const line = document.getElementById('strike-line');
+
+        cells.forEach(cell => cell.addEventListener('click', handleClick));
+
+        function handleClick(e) {
+            const index = e.target.getAttribute('data-index');
+            if (board[index] === "" && !checkWin(board)) {
+                makeMove(index, player);
+                if (!checkWin(board) && board.includes("")) {
+                    statusTxt.innerText = "LOG: AI_CALCULATING...";
+                    setTimeout(() => {
+                        const bestMove = minimax(board, ai).index;
+                        makeMove(bestMove, ai);
+                        const win = checkWin(board);
+                        if (win) drawLine(win);
+                    }, 400);
+                } else {
+                    const win = checkWin(board);
+                    if (win) drawLine(win);
+                    else if (!board.includes("")) statusTxt.innerText = "STATUS: DRAW";
+                }
+            }
+        }
+
+        function makeMove(i, s) {
+            board[i] = s;
+            cells[i].innerText = s;
+            cells[i].classList.add(s.toLowerCase());
+        }
+
+        function checkWin(b) {
+            const paths = [
+                {p:[0,1,2], type:'h', pos: 'top-[15%]'}, {p:[3,4,5], type:'h', pos: 'top-[48%]'}, {p:[6,7,8], type:'h', pos: 'top-[81%]'},
+                {p:[0,3,6], type:'v', pos: 'left-[15%]'}, {p:[1,4,7], type:'v', pos: 'left-[48%]'}, {p:[2,5,8], type:'v', pos: 'left-[81%]'},
+                {p:[0,4,8], type:'d1', pos: ''}, {p:[2,4,6], type:'d2', pos: ''}
+            ];
+            for (let path of paths) {
+                if (b[path.p[0]] && b[path.p[0]] === b[path.p[1]] && b[path.p[0]] === b[path.p[2]]) return path;
+            }
+            return null;
+        }
+
+        function drawLine(win) {
+            const color = board[win.p[0]] === 'X' ? '#00f2ff' : '#ff003c';
+            line.style.background = color;
+            line.style.boxShadow = `0 0 30px ${color}`;
+            line.style.display = 'block';
+            
+            if(win.type === 'h') {
+                line.style.width = '100%'; line.style.height = '6px';
+                line.style.top = (win.p[0]/3 === 0 ? '15%' : win.p[0]/3 === 1 ? '48%' : '81%');
+                line.style.left = '0'; line.style.transform = 'none';
+            } else if(win.type === 'v') {
+                line.style.width = '6px'; line.style.height = '100%';
+                line.style.left = (win.p[0] === 0 ? '15%' : win.p[0] === 1 ? '48%' : '81%');
+                line.style.top = '0'; line.style.transform = 'none';
+            } else if(win.type === 'd1') {
+                line.style.width = '130%'; line.style.height = '6px';
+                line.style.top = '50%'; line.style.left = '-15%'; line.style.transform = 'rotate(45deg)';
+            } else if(win.type === 'd2') {
+                line.style.width = '130%'; line.style.height = '6px';
+                line.style.top = '50%'; line.style.left = '-15%'; line.style.transform = 'rotate(-45deg)';
+            }
+            statusTxt.innerHTML = `<span style="color:${color}">LOG: SYSTEM_TERMINATED_BY_${board[win.p[0]]}</span>`;
+        }
+
+        function resetGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            cells.forEach(c => { c.innerText = ""; c.className = "cell"; });
+            line.style.display = 'none';
+            statusTxt.innerText = "LOG: WAITING_FOR_USER...";
+        }
+
+        // --- MINIMAX CORE (OTAK AI) ---
+        function minimax(newBoard, currPlayer) {
+            const avail = newBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+            const win = checkWin(newBoard);
+            if (win && board[win.p[0]] === player) return {score: -10};
+            if (win && board[win.p[0]] === ai) return {score: 10};
+            if (avail.length === 0) return {score: 0};
+
+            const moves = [];
+            for (let i = 0; i < avail.length; i++) {
+                let move = {index: avail[i]};
+                newBoard[avail[i]] = currPlayer;
+                move.score = minimax(newBoard, currPlayer === ai ? player : ai).score;
+                newBoard[avail[i]] = "";
+                moves.push(move);
+            }
+            let bestMove;
+            if (currPlayer === ai) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < moves.length; i++) { if (moves[i].score > bestScore) { bestScore = moves[i].score; bestMove = i; } }
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < moves.length; i++) { if (moves[i].score < bestScore) { bestScore = moves[i].score; bestMove = i; } }
+            }
+            return moves[bestMove];
+        }
+    </script>
+</body>
+</html>

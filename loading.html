@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHOST-DESTRO | ROBOT LOADING</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Plus+Jakarta+Sans:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #05000a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: white;
+        }
+
+        /* --- ANIMASI BACKGROUND MESH (KAYA GEMINI) --- */
+        .gemini-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1a0a2a 0%, #05000a 100%);
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(188, 19, 254, 0.3) 0%, rgba(255, 0, 255, 0.2) 100%);
+            filter: blur(80px);
+            border-radius: 50%;
+            animation: move 10s infinite alternate;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 100, 255, 0.15);
+            left: 10%;
+            top: 20%;
+            animation: move 15s infinite alternate-reverse;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%) scale(1); }
+            to { transform: translate(20%, 30%) scale(1.2); }
+        }
+
+        /* --- CONTENT --- */
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .ai-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px #bc13fe);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 25px #ff00ff); }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fff, #bc13fe, #fff);
+            background-size: 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .ai-status {
+            font-size: 14px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+        }
+
+        /* --- TOMBOL MASUK (Minimalist) --- */
+        .btn-enter {
+            margin-top: 40px;
+            padding: 12px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(188, 19, 254, 0.5);
+            color: white;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.5s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .btn-enter.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-enter:hover {
+            background: #bc13fe;
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
+            border-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gemini-bg">
+        <div class="blob"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <div class="ai-icon">✦</div>
+        <h1>DESTRO ROBOOT SYSTEM</h1>
+        <div class="ai-status" id="statusText">Menghubungkan ke server...</div>
+        
+        <button class="btn-enter" id="btnEnter" onclick="location.href='web.html'">MASUK KE DASHBOARD</button>
+    </div>
+
+    <script>
+        const statusText = document.getElementById('statusText');
+        const btnEnter = document.getElementById('btnEnter');
+
+        const logs = [
+            "Menganalisis data...",
+            "Sinkronisasi GHOST-DESTRO...",
+            "Optimalisasi UI/UX...",
+            "Sistem siap digunakan."
+        ];
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < logs.length) {
+                statusText.style.opacity = 0;
+                setTimeout(() => {
+                    statusText.innerText = logs[i];
+                    statusText.style.opacity = 1;
+                    i++;
+                }, 500);
+            } else {
+                clearInterval(interval);
+                btnEnter.classList.add('show');
+                statusText.innerText = "Selamat Datang, Dimas.";
+                statusText.style.color = "#bc13fe";
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
