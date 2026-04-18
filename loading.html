@@ -2,169 +2,430 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GHOST-DESTRO | ROBOT LOADING</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Plus+Jakarta+Sans:wght@300;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dimas Dwi Pangestu - GHOST-DESTRO Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        /* --- CSS RESET & BASE --- */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;
+        }
+        
         body {
-            background-color: #05000a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: white;
+            font-family: 'Fira Code', monospace;
+            background-color: #05000a; /* Hitam Pekat */
+            color: #ffffff;
+            line-height: 1.6;
+            scroll-behavior: smooth;
         }
 
-        /* --- ANIMASI BACKGROUND MESH (KAYA GEMINI) --- */
-        .gemini-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        /* --- BACKGROUND GAMBAR (Dengan Overlay biar teks kebaca) --- */
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?fit=crop&w=1350&q=80');
+            background-size: cover; background-position: center; filter: blur(3px) brightness(0.2);
+            z-index: -2;
+        }
+        .bg-color {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(30,0,60,0.5) 0%, rgba(5,0,10,1) 100%);
             z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #1a0a2a 0%, #05000a 100%);
         }
 
-        .blob {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: linear-gradient(135deg, rgba(188, 19, 254, 0.3) 0%, rgba(255, 0, 255, 0.2) 100%);
-            filter: blur(80px);
-            border-radius: 50%;
-            animation: move 10s infinite alternate;
-        }
-
-        .blob-2 {
-            width: 400px;
-            height: 400px;
-            background: rgba(0, 100, 255, 0.15);
-            left: 10%;
-            top: 20%;
-            animation: move 15s infinite alternate-reverse;
-        }
-
-        @keyframes move {
-            from { transform: translate(-10%, -10%) scale(1); }
-            to { transform: translate(20%, 30%) scale(1.2); }
-        }
-
-        /* --- CONTENT --- */
-        .container {
-            text-align: center;
-            z-index: 10;
-        }
-
-        .ai-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 15px #bc13fe);
-            animation: pulse-glow 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 25px #ff00ff); }
-        }
-
-        h1 {
+        /* --- UI ELEMENTS (HACKER PURPLE THEME) --- */
+        h1, h2, h3, .menu-link {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #fff, #bc13fe, #fff);
-            background-size: 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        @keyframes shine {
-            to { background-position: 200% center; }
+        h2 {
+            color: #bc13fe; /* Ungu Neon Utama */
+            text-shadow: 0 0 10px #bc13fe;
+            margin-bottom: 25px; font-size: 1.4rem; text-align: center;
         }
 
-        .ai-status {
-            font-size: 14px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 10px;
+        /* Hamburger Menu */
+        .hamburger {
+            position: fixed; top: 20px; left: 20px; z-index: 1000; cursor: pointer;
+            background: rgba(188, 19, 254, 0.1); padding: 10px; border-radius: 5px;
+            border: 1px solid rgba(188, 19, 254, 0.3);
+        }
+        .hamburger div {
+            width: 25px; height: 3px; background-color: #bc13fe; margin: 5px 0;
+            transition: 0.3s; box-shadow: 0 0 5px #bc13fe;
         }
 
-        /* --- TOMBOL MASUK (Minimalist) --- */
-        .btn-enter {
-            margin-top: 40px;
-            padding: 12px 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(188, 19, 254, 0.5);
-            color: white;
-            border-radius: 30px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: 0.5s;
-            opacity: 0;
-            transform: translateY(20px);
+        /* Sidebar Gahar */
+        .sidebar {
+            position: fixed; left: -260px; top: 0; width: 250px; height: 100%;
+            background-color: rgba(10, 0, 20, 0.95); border-right: 2px solid #bc13fe;
+            padding: 80px 20px; transition: 0.4s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+            z-index: 999; box-shadow: 10px 0 30px rgba(188, 19, 254, 0.2);
         }
+        .sidebar.open { left: 0; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 15px; border-bottom: 1px solid rgba(188, 19, 254, 0.1); padding-bottom: 8px; }
+        .sidebar a {
+            color: #fff; text-decoration: none; font-size: 13px; font-family: 'Orbitron';
+            transition: 0.3s;
+        }
+        .sidebar a:hover { color: #ff00ff; padding-left: 10px; }
 
-        .btn-enter.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Container */
+        .container { max-width: 800px; margin: 0 auto; padding: 20px 20px 80px; }
 
-        .btn-enter:hover {
-            background: #bc13fe;
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
-            border-color: transparent;
+        /* --- SECTIONS GENERAL --- */
+        section {
+            background-color: rgba(10, 0, 20, 0.8);
+            border: 1px solid rgba(188, 19, 254, 0.3);
+            padding: 30px 20px; margin-bottom: 30px; border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.3s;
         }
+        section:hover { border-color: #bc13fe; box-shadow: 0 0 20px rgba(188, 19, 254, 0.2); }
+
+        /* --- HEADER & PROFIL --- */
+        header { text-align: center; }
+        .profile-frame {
+            width: 120px; height: 120px; margin: 0 auto 20px;
+            border: 3px solid #bc13fe; border-radius: 50%; padding: 5px;
+            background: #000; box-shadow: 0 0 20px #bc13fe;
+        }
+        .profile-frame img {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+        }
+        .name {
+            font-size: 1.6rem; font-weight: 900; color: #fff;
+            text-shadow: 0 0 10px #bc13fe, 0 0 20px #ff00ff;
+            margin-bottom: 10px; border-right: none; animation: none;
+        }
+        .description { font-size: 13px; color: #ff00ff; }
+
+        /* --- PROYEK (Lama) --- */
+        .project-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+        .tech-btn {
+            padding: 10px 20px; background: transparent; border: 1px solid #bc13fe;
+            color: #bc13fe; font-size: 12px; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s;
+        }
+        .tech-btn:hover { background: #bc13fe; color: #000; box-shadow: 0 0 15px #bc13fe; }
+        .explanation { color: #ff00ff; font-size: 12px; display: none; margin-top: 15px; }
+
+        /* --- FAVORIT (Updated) --- */
+        .food-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media (min-width: 600px) { .food-grid { grid-template-columns: 1fr 1fr; } }
+        .food-card {
+            background: rgba(20,0,40,0.5); border: 1px solid #bc13fe;
+            padding: 15px; border-radius: 8px; text-align: left;
+        }
+        .food-card img {
+            width: 100%; height: 150px; object-fit: cover;
+            border-radius: 5px; margin-bottom: 10px; border: 1px solid #bc13fe;
+        }
+        .food-card h3 { color: #bc13fe; font-size: 14px; margin-bottom: 5px; }
+        .food-card p { font-size: 11px; color: #ff00ff; }
+
+        /* --- KEAHLIAN & PENGALAMAN (Lama) --- */
+        .skill { margin-bottom: 15px; }
+        .skill-name span { color: #bc13fe; font-size: 12px; }
+        .skill-bar { background-color: #1a0a2a; border-radius: 5px; height: 12px; border: 1px solid rgba(188, 19, 254, 0.3); }
+        .skill-fill { background-color: #bc13fe; box-shadow: 0 0 10px #bc13fe; }
+        
+        .timeline-item { border-left: 2px solid #bc13fe; padding-left: 15px; position: relative; }
+        .timeline-item::after {
+            content: ''; position: absolute; left: -6px; top: 0;
+            width: 10px; height: 10px; background: #bc13fe; border-radius: 50%;
+            box-shadow: 0 0 10px #bc13fe;
+        }
+        .timeline-content h3 { font-size: 14px; color: #bc13fe; }
+        .timeline-content p { font-size: 11px; color: #ff00ff; }
+
+        /* --- KONTAK (Updated) --- */
+        .contact-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        @media (min-width: 500px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
+        .contact-btn {
+            display: block; width: 100%; padding: 12px; text-decoration: none;
+            background: transparent; border: 1px solid #bc13fe; color: #fff;
+            font-size: 11px; font-family: 'Orbitron'; text-align: center; transition: 0.3s;
+        }
+        .contact-btn:hover { background: #bc13fe; color: #000; box-shadow: 0 0 15px #bc13fe; }
+
+        /* ========================================= */
+        /* --- FITUR BARU: GHOST-DESTRO HUB --- */
+        /* ========================================= */
+
+        /* --- 1. FITUR GAME CENTER --- */
+        .game-grid {
+            display: grid; grid-template-columns: 1fr; gap: 15px;
+        }
+        @media (min-width: 600px) { .game-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .game-card {
+            background: rgba(188, 19, 254, 0.05); border: 2px solid #bc13fe;
+            padding: 20px; text-align: center; border-radius: 10px;
+            cursor: pointer; transition: 0.4s; position: relative; overflow: hidden;
+        }
+        .game-card::after {
+            content: 'LAUNCHING...'; position: absolute; inset: 0;
+            background: rgba(0,0,0,0.9); color: #fff; font-family: 'Orbitron';
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.3s; font-size: 10px;
+        }
+        .game-card:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(188, 19, 254, 0.4); }
+        .game-card:hover::after { opacity: 1; }
+        
+        .game-icon { font-size: 30px; margin-bottom: 10px; color: #bc13fe; }
+        .game-title { color: #fff; margin-bottom: 5px; font-size: 14px; }
+        .game-desc { color: #ff00ff; font-size: 10px; }
+
+        /* --- 2. FITUR GALERI SQUAD --- */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+        }
+        @media (min-width: 600px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
+        
+        .gallery-item {
+            position: relative; overflow: hidden; border-radius: 8px; aspect-ratio: 1/1;
+            border: 1px solid rgba(188, 19, 254, 0.3); background: #111;
+        }
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover; transition: 0.5s;
+            filter: grayscale(80%) sepia(50%) hue-rotate(260deg);
+        }
+        .gallery-item:hover img { filter: grayscale(0%) sepia(0%); transform: scale(1.1); }
+        
+        .gallery-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+            padding: 20px 10px 10px; color: #fff; font-size: 9px;
+            opacity: 0; transition: 0.3s; text-align: center;
+        }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+        /* --- Teks Tentang Saya (Updated) --- */
+        .extra-section p { font-size: 12px; line-height: 1.8; color: #ff00ff; text-align: left; }
+
+        /* --- FOOTER (Added) --- */
+        .hacker-footer {
+            position: fixed; bottom: 0; width: 100%; background: #000;
+            padding: 10px; border-top: 1px solid #bc13fe;
+            display: flex; justify-content: space-around; font-size: 9px;
+            font-family: 'Orbitron'; color: #666; z-index: 998;
+        }
+        .pulse-dot { width: 6px; height: 6px; background: #0f0; border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
     </style>
 </head>
 <body>
+    <div class="bg-overlay"></div>
+    <div class="bg-color"></div>
 
-    <div class="gemini-bg">
-        <div class="blob"></div>
-        <div class="blob blob-2"></div>
+    <div class="hamburger" onclick="toggleSidebar()">
+        <div></div><div></div><div></div>
+    </div>
+    
+    <div class="sidebar" id="sidebar">
+        <h3 style="color: #bc13fe; font-size: 14px; margin-bottom: 25px;">GHOST-DESTRO </h3>
+        <ul>
+            <li><a href="#home" onclick="closeSidebar()">BERANDA</a></li>
+            <li><a href="#projects" onclick="closeSidebar()">PROYEK</a></li>
+            <li><a href="#favorites" onclick="closeSidebar()">FAVORIT MAKANAN</a></li>
+            <li><a href="#games" onclick="closeSidebar()">GAME PERMAINAN</a></li> <li><a href="#gallery" onclick="closeSidebar()">GALERI SQUAD</a></li> <li><a href="#contact" onclick="closeSidebar()">KONTAK</a></li>
+            <li><a href="#about" onclick="closeSidebar()">TENTANG SAYA</a></li>
+            <li><a href="#skills" onclick="closeSidebar()">KEAHLIAN</a></li>
+            <li><a href="#experience" onclick="closeSidebar()">PENGALAMAN</a></li>
+        </ul>
     </div>
 
     <div class="container">
-        <div class="ai-icon">✦</div>
-        <h1>DESTRO ROBOOT SYSTEM</h1>
-        <div class="ai-status" id="statusText">Menghubungkan ke server...</div>
-        
-        <button class="btn-enter" id="btnEnter" onclick="location.href='web.html'">MASUK KE DASHBOARD</button>
+        <header id="home">
+            <div class="profile-frame">
+                <img src="profil.jpg" alt="Dimas Dwi P" onerror="this.src='https://via.placeholder.com/150/1a0a2a/bc13fe?text=GD'">
+            </div>
+            <div class="name">Dimas Dwi Pangestu</div>
+            <div class="description">
+              HALO SAYA DIMAS PANGGIL SAYA DESTRO,SCROOL DAN LIHAT APA AJA YANG ADA DI DALAM SINI
+            </div>
+        </header>
+
+        <section id="games">
+            <h2>GAMES PERMAINAN</h2>
+            <div class="game-grid">
+                
+                <div class="game-card" onclick="location.href='game1.html'">
+                    <div class="game-icon">❌⭕</div>
+                    <div class="game-title">Tik Tak Toe</div>
+                    <div class="game-desc">Game Klasik Squad lu. Mainkan sekarang!</div>
+                </div>
+
+                <div class="game-card" onclick="location.href='game2.html'">
+                    <div class="game-icon">🧱🔥</div>
+                    <div class="game-title">Blok Blas</div>
+                    <div class="game-desc">Hancurkan blok, skor tinggi!</div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="gallery">
+            <h2>GALERI ALBUM</h2>
+            <div class="gallery-grid">
+                
+                <div class="gallery-item">
+                    <img src="gamefreefire.jpg" alt="Squad Poto" onerror="this.src='https://via.placeholder.com/200/202020/bc13fe?text=SQUAD+01'">
+                    <div class="gallery-overlay">SOLO  01: MABAR NIGHT</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="squad.jpg" alt="Squad Poto" onerror="this.src='https://via.placeholder.com/200/202020/bc13fe?text=SQUAD+02'">
+                    <div class="gallery-overlay">SQUAD  02: FREE FIRE</div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="mobilejen.jpg" alt="Dimas Poto" onerror="this.src='https://via.placeholder.com/200/202020/bc13fe?text=USER+PHOTO'">
+                    <div class="gallery-overlay">MOBILE LEGENDS</div>
+                </div>
+    <div class="gallery-item">
+                    <img src="stumble.jpg" alt="Squad Poto" onerror="this.src='https://via.placeholder.com/200/202020/bc13fe?text=SQUAD+02'">
+                    <div class="gallery-overlay">STUMBLE GUYS</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2>PROYEK SAYA</h2>
+            <p>Berjalan di Termux V1.2. Fokus pada HTML, CSS, JS,PYTHON DLL SERTA MEMBANGUN KESUKSESAN</p>
+            <div class="project-buttons">
+                <button class="tech-btn" onclick="toggleExplanation('html')">HTML</button>
+                <button class="tech-btn" onclick="toggleExplanation('css')">CSS</button>
+                <button class="tech-btn" onclick="toggleExplanation('js')">JAVASCRIPT</button>
+            </div>
+            <div id="html-explanation" class="explanation">
+                <p>> HTML (HyperText Markup Language) adalah struktur inti website. Tanpa ini, tidak ada GHOST-DESTRO Hub.</p>
+            </div>
+            <div id="css-explanation" class="explanation">
+                <p>> CSS (Cascading Style Sheets) memberikan tema hacker ungu ini. Desain futuristik.</p>
+            </div>
+            <div id="js-explanation" class="explanation">
+                <p>> JavaScript memberikan interaksi. Menjalankan skrip dashboard.</p>
+            </div>
+        </section>
+
+        <section id="favorites">
+            <h2>FAVORIT  (FOOD & DRINK)</h2>
+            <div class="food-grid">
+                <div class="food-card">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500" alt="Ayam Geprek">
+                    <h3>Ayam Geprek (Boster)</h3>
+                    <p>Favorit saat koding malam. Gurih pedas.</p>
+                </div>
+                
+                <<div class="food-card">
+    <img src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&q=80" alt="Nasi Goreng">
+    <h3>Nasi Goreng Spesial</h3>
+    <p>Nasi goreng adalah solusi paling cepat dan enak saat lapar melanda di tengah sesi koding malam.</p>
+</div>
+
+                
+                <div class="food-card">
+                    <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=500" alt="Kopi">
+                    <h3>Kopi (Fokus)</h3>
+                    <p>Menjaga fokus saat eksplorasi teknologi.</p>
+                </div>
+                
+                <div class="food-card">
+                    <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500" alt="Es Teh">
+                    <h3>Es Teh Manis</h3>
+                    <p>Menyegarkan setelah mabar atau koding.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="extra-section">
+            <p>Perjalanan saya dimulai dari sebuah layar kecil Redmi 9C. Bagi orang lain, terminal Termux hanyalah barisan teks hijau yang membosankan, tapi bagi saya, itu adalah gerbang menuju dunia tanpa batas. Saya adalah seorang pelajar yang percaya bahwa keamanan siber bukan tentang merusak, tapi tentang melindungi dan memahami bagaimana dunia digital bekerja. Di balik kodingan GHOST-DESTRO, ada ambisi besar untuk terus belajar, meskipun saat ini hobi saya mungkin terlihat sederhana di mata orang lain</p>
+        </section>
+
+        <section id="skills">
+            <h2>KEAHLIAN </h2>
+            <div class="skill">
+                <div class="skill-name"><span>HTML</span><span>80%</span></div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill: 80%; height:100%; width:0; border-radius:5px; animation:fill 2s forwards"></div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-name"><span>CSS</span><span>75%</span></div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill: 75%; height:100%; width:0; border-radius:5px; animation:fill 2s forwards"></div></div>
+            </div>
+            <div class="skill">
+                <div class="skill-name"><span>JAVASCRIPT </span><span>60%</span></div>
+                <div class="skill-bar"><div class="skill-fill" style="--fill: 60%; height:100%; width:0; border-radius:5px; animation:fill 2s forwards"></div></div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2>PENGALAMAN</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2026 - SEKARANG</h3>
+                        <p>Fokus Pengembangan Web & Cyber Security & Hacking (pelajar ).</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2022</h3>
+                        <p>mengenal apa itu hacker </p>
+                    </div>
+                    </div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2023-2025</h3>
+                        <p>belajar otodidak membuat tools dengan bantuan platform digital </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>@KONTAK</h2>
+            <div class="contact-grid">
+                <a href="https://wa.me/62895404399397" class="contact-btn">WHATSAPP</a>
+                <a href="https://tiktok.com/@mas_destro" class="contact-btn">TIKTOK</a>
+                <a href="https://instagram.com/ze_dims" class="contact-btn">INSTAGRAM</a>
+                <a href="https://github/zedimz" class="contact-btn">GITHUB</a>
+            </div>
+        </section>
+    </div>
+
+    <div class="hacker-footer">
+        <div>USER: DIMAS DWI P</div>
+        <div>IP: <span style="color:#bc13fe">192.168.GHOST.1</span></div>
+        <div><span class="pulse-dot"></span>ONLINE</div>
     </div>
 
     <script>
-        const statusText = document.getElementById('statusText');
-        const btnEnter = document.getElementById('btnEnter');
-
-        const logs = [
-            "Menganalisis data...",
-            "Sinkronisasi GHOST-DESTRO...",
-            "Optimalisasi UI/UX...",
-            "Sistem siap digunakan."
-        ];
-
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i < logs.length) {
-                statusText.style.opacity = 0;
-                setTimeout(() => {
-                    statusText.innerText = logs[i];
-                    statusText.style.opacity = 1;
-                    i++;
-                }, 500);
+        // JS bawaan diperbaiki & disederhanakan
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('open');
+        }
+        function toggleExplanation(id) {
+            const explanations = document.querySelectorAll('.explanation');
+            explanations.forEach(expl => {
+                if (expl.id !== id + '-explanation') {
+                    expl.style.display = 'none';
+                }
+            });
+            const targetExpl = document.getElementById(id + '-explanation');
+            if (targetExpl.style.display === 'block') {
+                targetExpl.style.display = 'none';
             } else {
-                clearInterval(interval);
-                btnEnter.classList.add('show');
-                statusText.innerText = "Selamat Datang, Dimas.";
-                statusText.style.color = "#bc13fe";
+                targetExpl.style.display = 'block';
             }
-        }, 2000);
+        }
     </script>
 </body>
-</html>
+    </html>
