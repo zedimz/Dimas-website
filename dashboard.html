@@ -130,7 +130,21 @@
         .skill { margin-bottom: 15px; }
         .skill-name span { color: #bc13fe; font-size: 12px; }
         .skill-bar { background-color: #1a0a2a; border-radius: 5px; height: 12px; border: 1px solid rgba(188, 19, 254, 0.3); }
-        .skill-fill { background-color: #bc13fe; box-shadow: 0 0 10px #bc13fe; }
+       
+.skill-fill {
+    background-color: #bc13fe; 
+    box-shadow: 0 0 15px #bc13fe;
+    height: 100%;
+    border-radius: 5px;
+    width: 0; /* Mulai dari nol */
+    animation: fill-bar 10s forwards; /* Durasi 10 detik buat ngisi */
+}
+
+/* Tambahkan perintah animasi ini di bawahnya */
+@keyframes fill-bar {
+    to { width: var(--fill); }
+}
+
         
         .timeline-item { border-left: 2px solid #bc13fe; padding-left: 15px; position: relative; }
         .timeline-item::after {
@@ -215,6 +229,29 @@
         }
         .pulse-dot { width: 6px; height: 6px; background: #0f0; border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+/* --- ANIMASI TEKS BERJALAN KHUSUS --- */
+.marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 10px 0;
+}
+
+.name-marquee {
+    display: inline-block;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 10px #bc13fe, 0 0 20px #ff00ff;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    animation: jalan-terus 10s linear infinite; /* Kecepatan jalan */
+}
+
+@keyframes jalan-terus {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
 
     </style>
 </head>
@@ -244,7 +281,10 @@
             <div class="profile-frame">
                 <img src="profil.jpg" alt="Dimas Dwi P" onerror="this.src='https://via.placeholder.com/150/1a0a2a/bc13fe?text=GD'">
             </div>
-            <div class="name">Dimas Dwi Pangestu</div>
+           <div class="marquee-wrapper">
+    <div class="name-marquee">Dimas Dwi Pangestu  (GHOST-DESTRO) </div>
+</div>
+
             <div class="description">
               HALO SAYA DIMAS PANGGIL SAYA DESTRO,SCROOL DAN LIHAT APA AJA YANG ADA DI DALAM SINI
             </div>
@@ -303,13 +343,25 @@
                 <button class="tech-btn" onclick="toggleExplanation('js')">JAVASCRIPT</button>
             </div>
             <div id="html-explanation" class="explanation">
-                <p>> HTML (HyperText Markup Language) adalah struktur inti website. Tanpa ini, tidak ada GHOST-DESTRO Hub.</p>
+                <p>> HTML (HyperText Markup Language) adalah struktur inti website. Tanpa ini, tidak ada web iniHTML bukan sekadar bahasa pemograman, melainkan pondasi dari seluruh ekosistem web.
+Semantic HTML Mastery: Penggunaan elemen seperti <article>, <aside>, dan <nav> untuk memberikan makna pada struktur data, sehingga mesin pencari (Google) dan teknologi pembaca layar bisa memahami isi web dengan lebih akurat.
+Advanced Forms & Input: Teknik pengumpulan data user dengan validasi bawaan (Required, Pattern, Type) guna memastikan data yang masuk ke sistem aman dan sesuai format.
+SEO Meta Optimization: Pengaturan tag <meta> untuk Open Graph (OG) agar saat link web lu dibagikan ke WhatsApp atau sosial media, muncul gambar dan deskripsi yang keren secara otomatis.
+Resource Linking: Cara menghubungkan file eksternal seperti CSS, JavaScript, dan Font Google agar web bisa berjalan secara harmonis.</p>
             </div>
             <div id="css-explanation" class="explanation">
-                <p>> CSS (Cascading Style Sheets) memberikan tema hacker ungu ini. Desain futuristik.</p>
+                <p>> CSS (Cascading Style Sheets) memberikan tema hacker ungu ini. Desain futuristik CSS adalah bahasa yang memberikan identitas visual dan estetika pada sebuah proyek digital.
+Modern Layout Engine (Flexbox & Grid): Sistem pengaturan tata letak dua dimensi yang memungkinkan elemen web bisa beradaptasi secara otomatis (responsive) di berbagai ukuran layar, mulai dari Redmi 9C lu sampai monitor PC 4K.
+Complex Animations & Transitions: Penggunaan @keyframes untuk menciptakan gerakan halus, seperti efek teks berjalan (marquee) dan transisi warna neon yang memberikan kesan futuristik.
+Variable Design (CSS Root): Teknik penggunaan variabel (--color-main) untuk menyimpan kode warna, sehingga jika lu mau ganti tema dari ungu ke hijau, lu cuma butuh ganti satu baris kode saja.
+Box Model & Shadows: Pengaturan Margin, Padding, dan Border yang dikombinasikan dengan box-shadow untuk menciptakan efek kedalaman (3D) dan cahaya (glow) ala hacker.</p>
             </div>
             <div id="js-explanation" class="explanation">
-                <p>> JavaScript memberikan interaksi. Menjalankan skrip dashboard.</p>
+                <p>> JavaScript memberikan interaksi. Menjalankan skrip dashboard JavaScript adalah otak yang mengatur interaksi, logika, dan kecerdasan buatan sederhana di dalam sebuah website.
+DOM (Document Object Model) Control: Teknik memanipulasi elemen HTML secara real-time. Contohnya: mengganti teks "Loading" menjadi "Access Granted" tanpa harus memuat ulang (refresh) halaman.
+Event-Driven Programming: Menghubungkan tindakan user (seperti klik, scroll, atau ketik) dengan fungsi tertentu di dalam script untuk menciptakan pengalaman yang interaktif.
+Asynchronous Process: Dasar untuk melakukan tugas di latar belakang, seperti mengambil data dari server atau menjalankan timer untuk game yang sedang lu kembangkan.
+Logic & Algorithm: Penerapan logika matematika dan kondisi (if/else, loops) untuk membangun sistem fungsional seperti kalkulator skor di game atau sistem keamanan sederhana.</p>
             </div>
         </section>
 
@@ -347,20 +399,29 @@
             <p>Perjalanan saya dimulai dari sebuah layar kecil Redmi 9C. Bagi orang lain, terminal Termux hanyalah barisan teks hijau yang membosankan, tapi bagi saya, itu adalah gerbang menuju dunia tanpa batas. Saya adalah seorang pelajar yang percaya bahwa keamanan siber bukan tentang merusak, tapi tentang melindungi dan memahami bagaimana dunia digital bekerja. Di balik kodingan GHOST-DESTRO, ada ambisi besar untuk terus belajar, meskipun saat ini hobi saya mungkin terlihat sederhana di mata orang lain</p>
         </section>
 
-        <section id="skills">
-            <h2>KEAHLIAN </h2>
-            <div class="skill">
-                <div class="skill-name"><span>HTML</span><span>80%</span></div>
-                <div class="skill-bar"><div class="skill-fill" style="--fill: 80%; height:100%; width:0; border-radius:5px; animation:fill 2s forwards"></div></div>
-            </div>
-            <div class="skill">
-                <div class="skill-name"><span>CSS</span><span>75%</span></div>
-                <div class="skill-bar"><div class="skill-fill" style="--fill: 75%; height:100%; width:0; border-radius:5px; animation:fill 2s forwards"></div></div>
-            </div>
-            <div class="skill">
-                <div class="skill-name"><span>JAVASCRIPT </span><span>60%</span></div>
-                <div class="skill-bar"><div class="skill-fill" style="--fill: 60%; height:100%; width:0; border-radius:5px; animation:fill 2s forwards"></div></div>
-            </div>
+      <section id="skills">
+    <h2>KEAHLIAN</h2>
+    
+    <div class="skill">
+        <div class="skill-name"><span>HTML</span><span>80%</span></div>
+        <div class="skill-bar">
+            <div class="skill-fill" style="--fill: 80%;"></div>
+        </div>
+    </div>
+
+    <div class="skill">
+        <div class="skill-name"><span>CSS</span><span>75%</span></div>
+        <div class="skill-bar">
+            <div class="skill-fill" style="--fill: 75%;"></div>
+        </div>
+    </div>
+
+    <div class="skill">
+        <div class="skill-name"><span>JAVASCRIPT</span><span>60%</span></div>
+        <div class="skill-bar">
+            <div class="skill-fill" style="--fill: 60%;"></div>
+        </div>
+    </div>
         </section>
 
         <section id="experience">
@@ -397,8 +458,8 @@
     </div>
 
     <div class="hacker-footer">
-        <div>USER: DIMAS DWI P</div>
-        <div>IP: <span style="color:#bc13fe">192.168.GHOST.1</span></div>
+        <div>USER: pengunjung</div>
+        <div>IP: <span style="color:#bc13fe">192.546.33</span></div>
         <div><span class="pulse-dot"></span>ONLINE</div>
     </div>
 
@@ -428,4 +489,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
