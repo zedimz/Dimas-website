@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHOST CORE SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #bc13fe; --bg: #05000a; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--p); 
+            font-family: 'Fira Code', monospace; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; overflow: hidden;
+            background-image: linear-gradient(rgba(188, 19, 254, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(188, 19, 254, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px; /* Efek Kotak-kotak Cyber */
+        }
+
+        /* Scanline Animation */
+        body::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(188, 19, 254, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.02));
+            background-size: 100% 2px, 3px 100%; pointer-events: none; z-index: 10;
+        }
+
+        .auth-container {
+            background: rgba(10, 0, 20, 0.95);
+            border: 2px solid var(--p);
+            padding: 45px;
+            border-radius: 20px;
+            width: 480px;
+            box-shadow: 0 0 40px rgba(188, 19, 254, 0.3), inset 0 0 20px rgba(188, 19, 254, 0.1);
+            text-align: center;
+            position: relative; z-index: 5;
+            transition: 0.3s;
+        }
+
+        /* Foto Profil */
+        .profile-header {
+            width: 100px; height: 100px;
+            margin: -95px auto 20px;
+            border: 3px solid var(--p);
+            border-radius: 50%;
+            background: var(--bg);
+            box-shadow: 0 0 20px var(--p);
+            overflow: hidden; display: none;
+        }
+        .profile-header img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Loading Logs */
+        #system-logs {
+            text-align: left; font-size: 11px; color: #888;
+            height: 150px; overflow-y: hidden;
+            margin-bottom: 20px; border-bottom: 1px solid rgba(188, 19, 254, 0.2);
+        }
+
+        .progress-bg { width: 100%; height: 8px; background: rgba(188,19,254,0.1); border-radius: 4px; overflow: hidden; border: 1px solid var(--p); }
+        .progress-fill { width: 0%; height: 100%; background: var(--p); box-shadow: 0 0 15px var(--p); transition: 0.2s; }
+
+        /* Form Styling */
+        h2 { font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 20px; text-shadow: 0 0 10px var(--p); }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { font-size: 10px; color: #fff; font-weight: bold; margin-left: 5px; }
+        
+        input {
+            background: #000; border: 1px solid rgba(188,19,254,0.4);
+            color: #fff; padding: 14px; width: 100%; border-radius: 8px;
+            outline: none; font-size: 14px; margin-top: 5px; transition: 0.3s;
+        }
+        input:focus { border-color: var(--p); box-shadow: 0 0 10px rgba(188, 19, 254, 0.4); }
+        input.error { border-color: #ff0000; animation: shake 0.2s ease-in-out 0s 2; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        button {
+            background: var(--p); color: #000; border: none;
+            padding: 15px; width: 100%; border-radius: 8px;
+            font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            margin-top: 10px; transition: 0.3s;
+        }
+        button:hover { box-shadow: 0 0 25px var(--p); transform: scale(1.02); }
+
+        .switch-text { font-size: 11px; margin-top: 20px; color: #888; }
+        .switch-text span { color: var(--p); cursor: pointer; text-decoration: underline; }
+
+        .hidden { display: none !important; }
+        .status-ok { color: #00ff00; float: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="profile-header" id="profile-pic">
+            <img src="yourphoto.jpg" alt="Profile" onerror="this.src='https://via.placeholder.com/100/bc13fe/000?text=DIMAS'">
+        </div>
+
+        <h2 id="title">GHOST BOOT</h2>
+
+        <div id="loading-section">
+            <div id="system-logs"></div>
+            <div class="progress-bg"><div class="progress-fill" id="fill"></div></div>
+            <p id="percent" style="font-size: 11px; text-align: right; margin-top: 8px;">0%</p>
+        </div>
+
+        <div id="register-section" class="hidden">
+            <div class="input-group">
+                <label>USER ID</label>
+                <input type="text" id="regUser" placeholder="Masukkan Username">
+            </div>
+            <div class="input-group">
+                <label>EMAIL</label>
+                <input type="email" id="regEmail" placeholder="Masukkan Email">
+            </div>
+            <div class="input-group">
+                <label>PASSWORD</label>
+                <input type="password" id="regPass" placeholder="******">
+            </div>
+            <button onclick="saveAccount()">INITIALIZE ACCOUNT</button>
+            <p class="switch-text">Sistem mendeteksi data? <span onclick="showLogin()">Login</span></p>
+        </div>
+
+        <div id="login-section" class="hidden">
+            <div class="input-group">
+                <label>NAMA/EMAIL</label>
+                <input type="text" id="loginId" placeholder="User atau Email">
+            </div>
+            <div class="input-group">
+                <label>PASSWORD</label>
+                <input type="password" id="loginPass" placeholder="******">
+            </div>
+            <button onclick="handleLogin()">ACCESS SYSTEM</button>
+            <p class="switch-text">Identitas tidak ditemukan? <span onclick="showRegister()">Daftar</span></p>
+        </div>
+    </div>
+
+    <script>
+        const logs = [
+            { t: "DESTRO SEDANG MENGECEK SISTEM ANDA", s: "OK" },
+            { t: "MOHON MENUNGGU", s: "OK" },
+            { t: "Halo saya AI DESTRO, SIAP MELAYANI ANDA", s: "" },
+            { t: "BYPASSING LOCAL ENCRYPTION", s: "OK" },
+            { t: "CONNECTING", s: "OK" },
+            { t: "READY FOR OPERATOR", s: "DONE" }
+        ];
+
+        let logIndex = 0;
+        const logBox = document.getElementById('system-logs');
+        const fill = document.getElementById('fill');
+
+        function startLoading() {
+            if (logIndex < logs.length) {
+                const p = document.createElement('p');
+                p.style.marginBottom = "8px";
+                if(logs[logIndex].t.includes("AI DESTRO")) {
+                    p.innerHTML = `<span style="color: #fff; text-shadow: 0 0 10px var(--p);">> ${logs[logIndex].t}</span>`;
+                } else {
+                    p.innerHTML = `<span>> ${logs[logIndex].t}</span> <span class="status-ok">${logs[logIndex].s}</span>`;
+                }
+                logBox.appendChild(p);
+                logBox.scrollTop = logBox.scrollHeight;
+
+                let progress = Math.round(((logIndex + 1) / logs.length) * 100);
+                fill.style.width = progress + "%";
+                document.getElementById('percent').innerText = progress + "%";
+
+                logIndex++;
+                let speed = logs[logIndex-1].t.includes("AI DESTRO") ? 1500 : 500;
+                setTimeout(startLoading, speed);
+            } else {
+                setTimeout(initSystem, 800);
+            }
+        }
+
+        function initSystem() {
+            document.getElementById('loading-section').classList.add('hidden');
+            document.getElementById('profile-pic').style.display = 'block';
+            if (localStorage.getItem('ghost_user')) { showLogin(); } else { showRegister(); }
+        }
+
+        function showRegister() {
+            document.getElementById('title').innerText = "REGISTER";
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('register-section').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('title').innerText = "LOGIN";
+            document.getElementById('register-section').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
+        }
+
+        function validate(inputs) {
+            let valid = true;
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el.value) {
+                    el.classList.add('error');
+                    setTimeout(() => el.classList.remove('error'), 500);
+                    valid = false;
+                }
+            });
+            return valid;
+        }
+
+        function saveAccount() {
+            if (!validate(['regUser', 'regEmail', 'regPass'])) return;
+            const user = document.getElementById('regUser').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+
+            localStorage.setItem('ghost_user', JSON.stringify({ user, email, pass }));
+            alert("Sistem Terdaftar!");
+            showLogin();
+        }
+
+        function handleLogin() {
+    if (!validate(['loginId', 'loginPass'])) return;
+    const id = document.getElementById('loginId').value;
+    const ps = document.getElementById('loginPass').value;
+    const db = JSON.parse(localStorage.getItem('ghost_user'));
+
+    if (db && (id === db.user || id === db.email) && ps === db.pass) {
+        // 1. Simpan tanda akses agar file chat tahu siapa yang masuk
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('activeUser', db.user);
+
+        alert("Akses Diterima, KING.");
+
+        // 2. REDIRECT KE FILE CHAT (Ganti chat.html sesuai nama file chat lu)
+        window.location.href = "ai-chat.html"; 
+    } else {
+        alert("Identity Invalid! Periksa kembali ID/Pass.");
+    }
+}
+
+
+        window.onload = startLoading;
+    </script>
+</body>
+</html>
