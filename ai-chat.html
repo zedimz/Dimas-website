@@ -49,7 +49,18 @@
         /* CHAT BUBBLES */
         .user-msg { align-self: flex-end; background: var(--user-msg-bg); padding: 12px 18px; border-radius: 22px 22px 4px 22px; max-width: 85%; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .ai-msg { align-self: flex-start; width: 100%; display: flex; gap: 12px; }
-        .ai-avatar { width: 35px; height: 35px; background: var(--purple); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; }
+       .ai-avatar { 
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
+    border: 1px solid var(--purple); /* Opsional: kasih garis ungu tipis */
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    flex-shrink: 0; 
+    object-fit: cover; /* Biar foto gak gepeng */
+}
+
         .ai-text { font-size: 16px; line-height: 1.6; color: #e4e4e7; width: 100%; overflow-x: auto; }
         .ai-text h1, .ai-text h2 { color: var(--purple); margin-top: 10px; }
         .ai-text code { background: #000; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
@@ -75,22 +86,29 @@
 
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <div class="sidebar" id="sidebar">
-        <div class="side-box" style="text-align:center;">
-            <img src="yourphoto.jpg" class="profile-img">
-            <div style="font-weight:bold; font-size: 18px;">Dimas Dwi Pangestu</div>
-            <div style="font-size:11px; color:var(--purple); font-weight: bold; margin-top:5px;"> DEVELOPER</div>
-        </div>
-        <div class="menu-title">Social Media</div>
-        <div class="side-box">
-            <a href="https://wa.me/62895404399397" class="side-link"><i class="fa-brands fa-whatsapp" style="color:#25d366;"></i> WhatsApp</a>
-            <a href="https://www.tiktok.com/@mas_destro" class="side-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
-        </div>
-        <div class="menu-title">System</div>
-        <div class="side-box">
-            <div class="side-link" onclick="location.reload()"><i class="fa-solid fa-arrows-rotate"></i> Reset Chat</div>
+   <div class="sidebar" id="sidebar">
+    <div class="side-box" style="text-align:center;">
+        <img src="yourphoto.jpg" class="profile-img">
+        <div style="font-weight:bold; font-size: 18px;">Dimas Dwi Pangestu</div>
+        <div style="font-size:11px; color:var(--purple); font-weight: bold; margin-top:5px;"> DEVELOPER</div>
+    </div>
+
+    <div class="menu-title">Social Media</div>
+    <div class="side-box">
+        <a href="https://wa.me/62895404399397" class="side-link"><i class="fa-brands fa-whatsapp" style="color:#25d366;"></i> WhatsApp</a>
+        <a href="https://www.tiktok.com/@mas_destro" class="side-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+    </div>
+
+    <div class="menu-title">System & Info</div>
+    <div class="side-box">
+        <div class="side-link" onclick="location.reload()"><i class="fa-solid fa-arrows-rotate"></i> Reset Chat</div>
+        <hr style="border: 0; border-top: 1px solid #27272a; margin: 10px 0;">
+        <div style="font-size: 12px; color: #a1a1aa; line-height: 1.5;">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #eab308; margin-bottom: 5px;"></i> <b>Development Info:</b><br>
+            Saat ini <b>DESTRO-AI</b> masih dalam tahap pengembangan oleh Dimas di Tegal. Karena status "Beta", mungkin terjadi error jika file terlalu besar atau server sibuk. Mohon maaf atas ketidaknyamanannya!
         </div>
     </div>
+</div>
 
     <div class="app-container">
         <header>
@@ -120,93 +138,130 @@
         </div>
     </div>
 
-    <script>
-        const text = "Halo,Ada yang saya bisa bantu?";
-        let index = 0;
-        let selectedImageData = null;
+   <script>
+    const text = "Halo, Ada yang saya bisa bantu?";
+    let index = 0;
+    let selectedImageData = null; // Ini bakal nyimpen hasil kompresi (Base64)
 
-        // Efek Ketik
-        function type() {
-            if (index < text.length) {
-                document.getElementById("typewriter").innerHTML += text.charAt(index);
-                index++;
-                setTimeout(type, 120);
-            }
+    function type() {
+        if (index < text.length) {
+            document.getElementById("typewriter").innerHTML += text.charAt(index);
+            index++;
+            setTimeout(type, 120);
         }
-        window.onload = type;
+    }
+    window.onload = type;
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
 
-        function autoResize(t) { t.style.height = 'auto'; t.style.height = (t.scrollHeight > 150 ? 150 : t.scrollHeight) + 'px'; }
+    function autoResize(t) { t.style.height = 'auto'; t.style.height = (t.scrollHeight > 150 ? 150 : t.scrollHeight) + 'px'; }
 
-        function handleFile(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    selectedImageData = e.target.result;
-                    document.getElementById('image-preview').src = selectedImageData;
-                    document.getElementById('preview-box').style.display = 'block';
+    // --- FUNGSI KOMPRESOR DESTRO ---
+    async function handleFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 800; // Standar biar n8n gak muntah tapi AI tetep pinter
+                let width = img.width;
+                let height = img.height;
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
                 }
-                reader.readAsDataURL(file);
-            }
-        }
 
-        function clearImage() {
-            selectedImageData = null;
-            document.getElementById('fileInput').value = '';
-            document.getElementById('preview-box').style.display = 'none';
-        }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Kompres ke JPEG kualitas 0.7 (70%)
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                selectedImageData = compressedBase64; 
+                
+                document.getElementById('image-preview').src = selectedImageData;
+                document.getElementById('preview-box').style.display = 'block';
+                console.log("Gambar berhasil diperas buat n8n!");
+            };
+        };
+        reader.readAsDataURL(file);
+    }
 
-        async function sendMessage() {
-            const input = document.getElementById('userInput');
-            const chatWindow = document.getElementById('chat-window');
-            const welcome = document.getElementById('welcome-screen');
-            const chatArea = document.getElementById('chat-area');
-            const pesan = input.value.trim();
+    function clearImage() {
+        selectedImageData = null;
+        document.getElementById('fileInput').value = '';
+        document.getElementById('preview-box').style.display = 'none';
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const chatWindow = document.getElementById('chat-window');
+        const welcome = document.getElementById('welcome-screen');
+        const chatArea = document.getElementById('chat-area');
+        const pesan = input.value.trim();
+        
+        if (!pesan && !selectedImageData) return;
+        if (welcome.style.display !== 'none') welcome.style.display = 'none';
+
+        let userContent = `<div class="user-msg">`;
+        if (selectedImageData) userContent += `<img src="${selectedImageData}" class="chat-img"><br>`;
+        userContent += pesan + `</div>`;
+        chatWindow.innerHTML += userContent;
+        
+        // Ambil base64-nya aja tanpa prefix 'data:image/jpeg;base64,'
+        const cleanBase64 = selectedImageData ? selectedImageData.split(',')[1] : null; 
+        
+        input.value = '';
+        input.style.height = 'auto';
+        const currentImageData = selectedImageData; // Simpan buat preview chat
+        clearImage();
+        chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+
+        const loadingId = "load-" + Date.now();
+        chatWindow.innerHTML += `
+            <div class="ai-msg" id="${loadingId}">
+             <img src="yourphoto.jpg" class="ai-avatar" style="object-fit: cover;">
+                <div class="ai-text"><i>Sedang berpikir...</i></div>
+            </div>`;
+
+        try {
+            const response = await fetch('https://zepper.app.n8n.cloud/webhook/ghost-ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    pesan: pesan, 
+                    gambar: cleanBase64 
+                })
+            });
             
-            if (!pesan && !selectedImageData) return;
-            if (welcome.style.display !== 'none') welcome.style.display = 'none';
+            let data = await response.text();
+            const formattedData = marked.parse(data);
 
-            // User Chat Bubble
-            let userContent = `<div class="user-msg">`;
-            if (selectedImageData) userContent += `<img src="${selectedImageData}" class="chat-img"><br>`;
-            userContent += pesan + `</div>`;
-            chatWindow.innerHTML += userContent;
+            document.getElementById(loadingId).remove();
+            chatWindow.innerHTML += `
+                <div class="ai-msg">
+                    <img src="yourphoto.jpg" class="ai-avatar" style="object-fit: cover;">
+                    <div class="ai-text">${formattedData}</div>
+                </div>`;
             
-            const tempImg = selectedImageData;
-            input.value = '';
-            input.style.height = 'auto';
-            clearImage();
+            hljs.highlightAll(); 
             chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
-
-            try {
-                const response = await fetch('https://zepper.app.n8n.cloud/webhook/ghost-ai', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pesan: pesan, gambar: tempImg })
-                });
-                
-                let data = await response.text();
-                
-                // Render teks AI pakai Marked biar rapi (tebal, list, dll)
-                const formattedData = marked.parse(data);
-
-                chatWindow.innerHTML += `
-                    <div class="ai-msg">
-                        <div class="ai-avatar">G</div>
-                        <div class="ai-text">${formattedData}</div>
-                    </div>`;
-                
-                hljs.highlightAll(); // Highlight kode kalau ada kodingan
-                chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
-            } catch (e) {
-                chatWindow.innerHTML += `<div style="color:red; font-size:12px;">Koneksi Gagal ke DESTRO-core.</div>`;
-            }
+        } catch (e) {
+            document.getElementById(loadingId).innerHTML = `
+              <img src="yourphoto.jpg" class="ai-avatar" style="object-fit: cover;">
+                <div class="ai-text" style="color:#ef4444;">Koneksi Gagal ke DESTRO-core. Coba kirim ulang, Cok.</div>`;
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
