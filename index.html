@@ -1,172 +1,80 @@
 <!DOCTYPE html>
 <html lang="id">
+    
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="YKiYYo-WRYOoj6buf_kpe9cEZPgDRjNuxs3o1Az55Ck" />
-    
-    <title>GHOST-DESTRO | ROBOT LOADING</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Plus+Jakarta+Sans:wght@300;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: #05000a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: white;
+        body { 
+            margin: 0; background: #050505; color: #00d4ff; 
+            font-family: 'Courier New', monospace; 
+            display: flex; flex-direction: column; justify-content: center; 
+            align-items: center; height: 100vh; text-align: center;
         }
 
-        /* --- ANIMASI BACKGROUND MESH (KAYA GEMINI) --- */
-        .gemini-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #1a0a2a 0%, #05000a 100%);
+        /* Gasing Biru */
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #1a1a1a;
+            border-top: 4px solid #00d4ff; border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin-bottom: 20px;
+            box-shadow: 0 0 15px #00d4ff;
         }
 
-        .blob {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: linear-gradient(135deg, rgba(188, 19, 254, 0.3) 0%, rgba(255, 0, 255, 0.2) 100%);
-            filter: blur(80px);
-            border-radius: 50%;
-            animation: move 10s infinite alternate;
+        /* Video 16:9 */
+        .video-container {
+            width: 80%; max-width: 600px; aspect-ratio: 16 / 9;
+            background: #000; border-radius: 10px; overflow: hidden;
+            border: 2px solid #00d4ff; box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
         }
 
-        .blob-2 {
-            width: 400px;
-            height: 400px;
-            background: rgba(0, 100, 255, 0.15);
-            left: 10%;
-            top: 20%;
-            animation: move 15s infinite alternate-reverse;
-        }
+        #loadingVideo { width: 100%; height: 100%; object-fit: cover; }
 
-        @keyframes move {
-            from { transform: translate(-10%, -10%) scale(1); }
-            to { transform: translate(20%, 30%) scale(1.2); }
-        }
+        /* Teks Proses */
+        #status-msg { margin-top: 20px; font-size: 1rem; height: 20px; }
+        #percent { font-size: 2.5rem; font-weight: bold; margin-top: 10px; text-shadow: 0 0 10px #00d4ff; }
 
-        /* --- CONTENT --- */
-        .container {
-            text-align: center;
-            z-index: 10;
-        }
-
-        .ai-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 15px #bc13fe);
-            animation: pulse-glow 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 25px #ff00ff); }
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #fff, #bc13fe, #fff);
-            background-size: 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        .ai-status {
-            font-size: 14px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 10px;
-        }
-
-        /* --- TOMBOL MASUK (Minimalist) --- */
-        .btn-enter {
-            margin-top: 40px;
-            padding: 12px 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(188, 19, 254, 0.5);
-            color: white;
-            border-radius: 30px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: 0.5s;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .btn-enter.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .btn-enter:hover {
-            background: #bc13fe;
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.6);
-            border-color: transparent;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="gemini-bg">
-        <div class="blob"></div>
-        <div class="blob blob-2"></div>
+    <div class="spinner"></div>
+
+    <div class="video-container">
+        <video id="loadingVideo" autoplay muted loop playsinline>
+            <source src="justmin.mp4" type="video/mp4">
+        </video>
     </div>
 
-    <div class="container">
-        <div class="ai-icon">✦</div>
-        <h1>DESTRO ROBOOT SYSTEM</h1>
-        <div class="ai-status" id="statusText">Menghubungkan ke server...</div>
-        
-        <button class="btn-enter" id="btnEnter" onclick="location.href='dashboard.html'">MASUK KE DASHBOARD</button>
-    </div>
+    <div id="status-msg">Inisialisasi sistem...</div>
+    <div id="percent">0%</div>
 
     <script>
-        const statusText = document.getElementById('statusText');
-        const btnEnter = document.getElementById('btnEnter');
-
-        const logs = [
-            "Menganalisis data...",
-            "Sinkronisasi GHOST-DESTRO...",
-            "Optimalisasi UI/UX...",
-            "Sistem siap digunakan."
+        const pText = document.getElementById('percent');
+        const msg = document.getElementById('status-msg');
+        const tasks = [
+            "Memuat...",
+            "Melindungi port dari serangan bot...",
+            " loading ...",
+            " koneksi aman...",
+            "Akses diterima..."
         ];
 
-        let i = 0;
+        let p = 0;
         const interval = setInterval(() => {
-            if (i < logs.length) {
-                statusText.style.opacity = 0;
-                setTimeout(() => {
-                    statusText.innerText = logs[i];
-                    statusText.style.opacity = 1;
-                    i++;
-                }, 500);
-            } else {
+            p++;
+            pText.innerText = p + "%";
+
+            // Ganti teks tiap 20% (5 detik total / 5 teks = 1 detik per teks)
+            if (p === 20) msg.innerText = tasks[1];
+            if (p === 40) msg.innerText = tasks[2];
+            if (p === 60) msg.innerText = tasks[3];
+            if (p === 80) msg.innerText = tasks[4];
+            
+            if(p >= 100) {
                 clearInterval(interval);
-                btnEnter.classList.add('show');
-                statusText.innerText = "Selamat Datang, Dimas.";
-                statusText.style.color = "#bc13fe";
+                window.location.href = "login.html";
             }
-        }, 2000);
+        }, 70); // 50ms * 100 = 5000ms (5 detik)
     </script>
 </body>
-            </html>
+</html>
