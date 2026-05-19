@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DESTRO Portofolio </title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           CENTRAL CSS - MODERN DARK/LIGHT THEME
+           ========================================= */
+        :root {
+            --primary: #0066ff;
+            --secondary: #6c5ce7;
+            --bg-light: #f8faff;
+            --text-dark: #1a1a1b;
+            --white: #ffffff;
+            --gray: #64748b;
+            --glass: rgba(255, 255, 255, 0.8);
+            --shadow: 0 10px 30px rgba(0, 102, 255, 0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: var(--white);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
+            z-index: 9999;
+            transition: var(--transition);
+            padding: 40px 20px;
+        }
+
+        .sidebar.active { left: 0; }
+
+        .sidebar-brand {
+            font-weight: 800;
+            font-size: 24px;
+            margin-bottom: 50px;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .sidebar-menu { list-style: none; }
+
+        .sidebar-menu li { margin-bottom: 15px; }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a i { margin-right: 15px; width: 20px; text-align: center; }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateX(10px);
+        }
+
+        /* Top Header */
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .menu-btn {
+            font-size: 24px;
+            cursor: pointer;
+            background: var(--white);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Sections Handling (SPA logic) */
+        /* Hilangkan display none supaya bisa di-scroll ke bawah */
+.page-content { 
+    display: block; /* Wajib block biar muncul semua */
+    padding: 100px 5%; 
+    min-height: 100vh; 
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Tambahkan ini di bagian paling bawah CSS lo */
+html {
+    scroll-behavior: smooth; /* Biar pas meluncur halus */
+}
+
+/* Style biar menu sidebar yang aktif kelihatan beda pas di-scroll */
+.sidebar-menu a.active {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+}
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard/Hero Styles */
+        .hero { text-align: center; padding: 60px 0; }
+        .hero-badge {
+            background: #e0ebff;
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .hero h1 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+        .hero span { color: var(--primary); }
+        .hero p { color: var(--gray); font-size: 18px; max-width: 600px; margin: 0 auto 40px; }
+
+        .btn-group { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .btn {
+            padding: 16px 35px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .btn-main { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(0,102,255,0.2); }
+        .btn-main:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,102,255,0.4); }
+
+        /* Card System (For Gallery/Products) */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, min-width(300px), 1fr); gap: 25px; margin-top: 40px; }
+        
+        /* Desktop Grid Fix */
+        @media (min-width: 992px) {
+            .grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .card:hover { transform: translateY(-10px); box-shadow: var(--shadow); }
+
+        .card-img { width: 100%; height: 200px; background: #EEEEEE; object-fit: cover; }
+        .card-body { padding: 25px; }
+        .card-tag { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
+        .card-title { font-size: 20px; margin: 10px 0; font-weight: 700; }
+        
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 50px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        .stat-number { font-size: 32px; font-weight: 800; color: var(--primary); }
+        .stat-label { color: var(--gray); font-weight: 500; }
+
+        /* Platform Icons */
+        .platform-list {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .platform-chip {
+            background: var(--white);
+            padding: 12px 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            border: 1px solid #eee;
+        }
+
+        /* Overlays */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+        .overlay.active { display: block; }
+/* Styling Product yang lebih Detail */
+.card-price {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 15px 0;
+}
+
+.card-features {
+    list-style: none;
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-bottom: 20px;
+}
+
+.card-features li {
+    margin-bottom: 5px;
+}
+
+.card-features li i {
+    color: #25D366;
+    margin-right: 8px;
+}
+
+/* Animasi Gaya Hidup (Scroll Reveal) */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Animasi Bertahap */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+.typing-text {
+    overflow: hidden; 
+    border-right: 3px solid var(--primary);
+    white-space: nowrap;
+    animation: blink 0.75s step-end infinite;
+}
+@keyframes blink { 50% { border-color: transparent; } }
+/* Styling Card Game yang lebih 'Sangar' */
+.card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    padding: 15px; /* Biar ada napas di dalem */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(0, 102, 255, 0.2);
+    border: 1px solid var(--primary);
+}
+
+.card-img {
+    border-radius: 16px;
+    margin-bottom: 15px;
+    transition: transform 0.4s ease;
+}
+
+.card:hover .card-img {
+    transform: scale(1.05);
+}
+
+.card-title {
+    font-size: 22px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.card-tag {
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+/* Update CSS untuk efek Hover & Glass */
+.card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 24px !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 102, 255, 0.25) !important;
+    border: 1px solid var(--primary);
+}
+
+.card-img {
+    transition: transform 0.6s ease;
+}
+
+.card:hover .card-img {
+    transform: scale(1.05);
+}
+
+/* Biar tombol arrow muncul pas di-hover */
+.card i.fa-arrow-right {
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.card:hover i.fa-arrow-right {
+    opacity: 1;
+    transform: translateX(5px);
+}
+.gallery-item img {
+    cursor: zoom-in;
+    transition: 0.3s;
+}
+
+.gallery-item img:hover {
+    filter: brightness(80%);
+}
+
+/* Biar card galeri rapi sama kayak card produk/game */
+.gallery-item {
+    padding: 0 !important; /* Biar gambar nutupin card */
+}
+/* Efek Smooth Scroll Natural */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Intro Animation: Konten muncul perlahan (Fade In) */
+body {
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Pastikan semua section punya transisi */
+.page-content {
+    transition: opacity 1s ease-in-out;
+}
+.card {
+    transition: transform 0.3s ease, opacity 0.5s ease;
+    opacity: 1;
+}
+
+/* Biar saat loading awal section tidak langsung muncul "jedag-jedug" */
+.page-content {
+    animation: slideUp 1s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+/* Definisikan warna di root */
+:root {
+    --bg-color: #f0f7ff; /* Putih kebiruan */
+    --text-color: #333;
+    --card-bg: #fff;
+}
+/* --- GANTI BAGIAN PALING BAWAH CSS LO DENGAN INI --- */
+
+/* Aturan Dark Mode yang Kuat (Menggunakan CSS Selector yang Spesifik) */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode #dashboard,
+body.dark-mode .page-content,
+body.dark-mode header,
+body.dark-mode .sidebar,
+body.dark-mode .card,
+body.dark-mode .stat-item,
+body.dark-mode .platform-chip {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+/* Pastikan semua teks berubah jadi terang di mode gelap */
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode p, 
+body.dark-mode span, 
+body.dark-mode a,
+body.dark-mode .card-title,
+body.dark-mode .typing-text {
+    color: #e0e0e0 !important;
+}
+
+/* Memperbaiki warna background dashboard secara spesifik */
+body.dark-mode #dashboard {
+    background-color: #121212 !important;
+}
+
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+}
+
+.card {
+    background-color: var(--card-bg);
+}
+
+#dashboard {
+    background-color: var(--bg-color) !important;
+}
+/* Aturan dasar: Border hitam/gelap dan background putih */
+.card {
+    background: #ffffff !important;
+    border: 2px solid #1a1a1b !important; /* Border awal hitam */
+    border-radius: 24px !important;
+    transition: all 0.4s ease !important;
+}
+
+/* Aturan pas diklik/hover: Border berubah jadi biru */
+.card:hover, .card:active {
+    border: 2px solid var(--primary) !important; /* Border jadi biru */
+    box-shadow: 0 10px 20px rgba(0, 102, 255, 0.2) !important; /* Tambah efek shadow biru biar makin manis */
+    transform: translateY(-5px);
+}
+
+/* Dark Mode (biar gak bentrok sama mode gelap) */
+body.dark-mode .card {
+    background: #1e1e1e !important;
+    border: 2px solid #444 !important; /* Dark mode border abu-abu gelap */
+}
+
+body.dark-mode .card:hover, body.dark-mode .card:active {
+    border: 2px solid var(--primary) !important;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="mainSidebar">
+        <div class="sidebar-brand">DESTRO</div>
+        <ul class="sidebar-menu">
+            <li><a href="#" onclick="showPage('dashboard')" id="nav-dashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#game" onclick="showPage('game')" id="nav-game"><i class="fas fa-gamepad"></i> Game</a></li>
+            <li><a href="#gallery" onclick="showPage('gallery')" id="nav-gallery"><i class="fas fa-images"></i> Gallery</a></li>
+            <li><a href="#Favorit" onclick="showPage('favorit')" id="nav-favorit"><i class="fas fa-star"></i> makanan  Favorit</a></li>
+            <li><a href="#section-product" onclick="showPage('product')" id="nav-product"><i class="fas fa-box"></i> Product Kami</a></li>
+            <li><a href="#contact" onclick="showPage('platform')" id="nav-platform"><i class="fas fa-layer-group"></i> hubungi kami</a></li>
+            <li><a href="#about-me" onclick="showPage('product')" id="nav-product"><i class="fas fa-box"></i> aboutme</a></li>
+            <li><a href="#skills" onclick="showPage('platform')" id="nav-platform"><i class="fas fa-layer-group"></i> keahlian</a></li>
+     
+        </ul>
+    </div>
+
+    <header>
+        <div class="menu-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars-staggered"></i>
+        </div>
+        <div style="font-weight: 800; font-size: 20px;">Portofolio <span style="color: var(--primary);">Dimas</span></div>
+        <div class="menu-btn" onclick="toggleTheme()">
+    <i class="fas fa-moon" id="theme-icon"></i>
+</div>
+
+    </header>
+<main>
+  <section id="dashboard" class="page-content active">
+    <div class="hero">
+        <div class="hero-badge">owner:destro</div>
+        <h1 style="font-size: 40px; margin-bottom: 10px;">
+            <span style="font-size: 20px; color: var(--gray);">Developer: Dimas</span><br>
+            Hello My Portofolio <span style="color: var(--primary);">DESTRO</span>
+        </h1>
+        <p>selamat datang di portofolio saya
+      , scrool untuk melihat apa saja yang telah di perbarui</p>
+        <div class="btn-group">
+            <a href="https://wa.me/62895404399397" class="btn btn-main">Hubungi Developer <i class="fas fa-whatsapp"></i></a>
+            <a href="#section-product" class="btn" style="border: 1px solid #ddd;">Lihat Product</a>
+        </div>
+    </div>
+
+
+    <div style="margin-top: 80px; text-align: center; padding: 40px; border-top: 1px solid #eee;">
+        <h3 style="margin-bottom: 20px;">Hubungi Saya</h3>
+        <div style="display: flex; justify-content: center; gap: 30px; font-size: 30px;">
+            <a href="https://wa.me/62895404399397" style="color: #25D366;"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://t.me/destrooit" style="color: #0088cc;"><i class="fab fa-telegram"></i></a>
+            <a href="https://instagram.com/tn.xstro404" style="color: #E1306C;"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+
+    <div style="margin: 40px 0; background: #fff; padding: 15px; border-radius: 10px; border: 1px solid #e1e1e1;">
+        <marquee behavior="scroll" direction="left" scrollamount="8" style="font-weight: bold; color: var(--primary);">
+            HUBUNGI SAYA SEKARANG: WA 0895404399397 &nbsp; | &nbsp; TELEGRAM @destrooit &nbsp; | &nbsp; SIAP MELAYANI 24/7
+        </marquee>
+    </div>
+</section>
+</main>
+
+
+<section id="game" class="page-content reveal">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h2 class="typing-text" style="font-size: 36px; font-weight: 800; color: var(--text-dark);">Games</h2>
+        <p style="color: var(--gray); margin-top: 10px;">Koleksi game mini yang dikembangkan dengan JavaScript.</p>
+    </div>
+    
+    <div class="grid">
+        <a href="game1.html" class="card" style="text-decoration: none; display: block; position: relative; overflow: hidden;">
+            <div class="card-img" style="background: linear-gradient(45deg, #0066ff, #6c5ce7); height: 180px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-gamepad" style="font-size: 50px; color: white;"></i>
+            </div>
+            <div class="card-body">
+                <div class="card-tag">block blast</div>
+                <h3 class="card-title">Raih kemenangan </h3>
+                <p style="font-size: 14px; color: #666; line-height: 1.5;">Game santai.</p>
+            </div>
+            <div style="position: absolute; bottom: 20px; right: 20px; font-size: 20px; color: var(--primary);">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <a href="game2.html" class="card" style="text-decoration: none; display: block; position: relative; overflow: hidden;">
+            <div class="card-img" style="background: linear-gradient(45deg, #ff9f43, #ff6b6b); height: 180px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-running" style="font-size: 50px; color: white;"></i>
+            </div>
+            <div class="card-body">
+                <div class="card-tag">tic tac toe</div>
+                <h3 class="card-title"> lawan lah dimas sampai menang</h3>
+                <p style="font-size: 14px; color: #666; line-height: 1.5;">menangkan point untuk bergabung dengan tim semsecteam.</p>
+            </div>
+            <div style="position: absolute; bottom: 20px; right: 20px; font-size: 20px; color: var(--primary);">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+    </div>
+</section>
+
+
+      <section id="gallery" class="page-content reveal">
+    <h2 class="typing-text" style="font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 30px;">gallery foto</h2>
+    <div class="grid">
+        <div class="card gallery-item">
+            <img src="https://i.ibb.co.com/Psg9p0fQ/IMG-20260519-202823.jpg" class="card-img" onclick="openLightbox(this.src)">
+            <div class="card-body">
+                <h3 style="font-size: 16px;">roblox</h3>
+                <p style="font-size: 12px; color: var(--gray);">membuat anda mengingat masalalu.</p>
+            </div>
+        </div>
+        <div class="card gallery-item">
+            <img src="https://i.ibb.co.com/d04k4bG2/IMG-20260428-191131.jpg" class="card-img" onclick="openLightbox(this.src)">
+            <div class="card-body">
+                <h3 style="font-size: 16px;">Bot Automation</h3>
+                <p style="font-size: 12px; color: var(--gray);">Hasil kerja bot wa otomatisasi 24 jam non-stop.</p>
+            </div>
+        </div>
+        <div class="card gallery-item">
+            <img src="https://i.ibb.co.com/Mk8K1LKK/Dimasyapping.jpg" class="card-img" onclick="openLightbox(this.src)">
+            <div class="card-body">
+                <h3 style="font-size: 16px;">turnament tahun lalu</h3>
+                <p style="font-size: 12px; color: var(--gray);">tahun lalu.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="lightbox" onclick="this.style.display='none'" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center;">
+    <img id="lightbox-img" style="max-width:90%; max-height:80%; border-radius:10px;">
+    <p style="position:absolute; bottom:20px; color:white;">Klik di mana saja untuk menutup</p>
+</div>
+
+        <section id="favorit" class="page-content reveal">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h2 class="typing-text" style="font-size: 32px; font-weight: 800;">Favorit Saya</h2>
+        <p style="color: var(--gray);">Makanan dan minuman yang selalu jadi mood booster.</p>
+    </div>
+
+    <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-utensils"></i> Makanan</h3>
+    <div class="grid">
+        <div class="card">
+            <img src="https://i.ibb.co.com/cKynTBTx/kulit-ayam-crispy-geprek.jpg" class="card-img" style="height: 150px;">
+            <div class="card-body">
+                <h3>Ayam Geprek</h3>
+                <p style="font-size: 13px; color: #666;">Ayam crispy dengan sambal bawang pedas yang nendang, paling pas buat makan siang.</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://i.ibb.co.com/whJdFfYX/d0cdf001-085f-44ef-8ae0-57bb5700638f-71076171-c637-49fb-8aab-42841f6e3196.jpg" class="card-img" style="height: 150px;">
+            <div class="card-body">
+                <h3>Nasi Padang</h3>
+                <p style="font-size: 13px; color: #666;">Sajian kaya rempah dengan rendang dan kuah gulai yang ikonik dari tanah Minang.</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://i.ibb.co.com/zT9248cq/257956.jpg" class="card-img" style="height: 150px;">
+            <div class="card-body">
+                <h3>Mie Ayam</h3>
+                <p style="font-size: 13px; color: #666;">Mie lembut dengan topping ayam kecap manis gurih dan kuah kaldu yang hangat.</p>
+            </div>
+        </div>
+    </div>
+
+<h3 style="margin: 40px 0 20px; color: var(--secondary);"><i class="fas fa-mug-hot"></i> Minuman Favorit</h3>
+<div class="grid">
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772" class="card-img" style="height: 150px;">
+        <div class="card-body">
+            <h3>Kopi Hitam</h3>
+            <p style="font-size: 13px; color: #666;">kopi hitam membantu saya untuk bersemangat bersama asap.</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1590779033100-9f60a05a013d" class="card-img" style="height: 150px;">
+        <div class="card-body">
+            <h3>Kopi Good Day</h3>
+            <p style="font-size: 13px; color: #666;">Varian sachet legendaris yang manis dan praktis, mood booster paling gampang buat nunggu bot running.</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="https://i.ibb.co.com/vvVLZC9P/Instagram-bandarpowder.webp" class="card-img" style="height: 150px;">
+        <div class="card-body">
+            <h3>Cappuccino</h3>
+            <p style="font-size: 13px; color: #666;">membantu saya untuk berrelaksi terhadap pikiran.</p>
+        </div>
+    </div>
+</div>
+</section>
+
+<section id="section-product" class="page-content reveal">
+    <h2 class="typing-text" style="font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 50px;">Produk kami</h2>
+    <div class="grid">
+        
+        <div class="card" style="border-top: 5px solid #25D366;">
+            <div class="card-body">
+                <i class="fas fa-bug" style="font-size: 30px; color: #25D366; margin-bottom: 15px;"></i>
+                <h3>Jasbug WA</h3>
+                <p style="font-size: 13px; color: var(--gray); margin: 10px 0;">Bug WhatsApp spesialis untuk testing keamanan sistem.</p>
+                <h4 style="font-size: 20px; color: var(--primary);">Rp 5.000 <span style="font-size: 12px; color: #999;">/nomor</span></h4>
+                <a href="https://wa.me/62895404399397" class="btn btn-main" style="display:block; margin-top:15px; padding: 10px;">Order WA</a>
+            </div>
+        </div>
+
+        <div class="card" style="border-top: 5px solid var(--primary);">
+            <div class="card-body">
+                <i class="fas fa-code" style="font-size: 30px; color: var(--primary); margin-bottom: 15px;"></i>
+                <h3>Jasgen freefire cs</h3>
+                <p style="font-size: 13px; color: var(--gray); margin: 10px 0;">Jasa gendong free fire dijamin ws,1rb/2bintang.</p>
+                <h4 style="font-size: 20px; color: var(--primary);">2b/rp1.500</h4>
+                <a href="https://t.me/destrooit" class="btn btn-main" style="display:block; margin-top:15px; padding: 10px;">Chat Tele</a>
+            </div>
+        </div>
+
+        <div class="card" style="border-top: 5px solid #e74c3c;">
+            <div class="card-body">
+                <i class="fas fa-paper-plane" style="font-size: 30px; color: #e74c3c; margin-bottom: 15px;"></i>
+                <h3>Jasa Blast WA</h3>
+                <p style="font-size: 13px; color: var(--gray); margin: 10px 0;">Fix kenon! Bergaransi jika kena banned setelah 1 bulan.</p>
+                <h4 style="font-size: 20px; color: var(--primary);">Konsultasi</h4>
+                <a href="https://wa.me/62895404399397" class="btn btn-main" style="display:block; margin-top:15px; padding: 10px;">Order WA</a>
+            </div>
+        </div>
+
+        <div class="card" style="border-top: 5px solid #9b59b6;">
+            <div class="card-body">
+                <i class="fas fa-lock" style="font-size: 30px; color: #9b59b6; margin-bottom: 15px;"></i>
+                <h3>Book cyber security</h3>
+                <p style="font-size: 13px; color: var(--gray); margin: 10px 0;">Tools khusus untuk latihan penetrasi testing & security.</p>
+                <h4 style="font-size: 20px; color: var(--primary);">Rp 15.000</h4>
+                <a href="https://t.me/destrooit" class="btn btn-main" style="display:block; margin-top:15px; padding: 10px;">Order Tele</a>
+            </div>
+        </div>
+
+        <div class="card" style="border-top: 5px solid #f1c40f;">
+            <div class="card-body">
+                <i class="fas fa-graduation-cap" style="font-size: 30px; color: #f1c40f; margin-bottom: 15px;"></i>
+                <h3>Kelas Hacking</h3>
+                <p style="font-size: 13px; color: var(--gray); margin: 10px 0;">Belajar dari dasar sampai mahir jadi Bug Hunter handal.</p>
+                <h4 style="font-size: 20px; color: var(--primary);">Rp 30.000</h4>
+                <a href="https://wa.me/62895404399397" class="btn btn-main" style="display:block; margin-top:15px; padding: 10px;">Gabung Kelas</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+        <section id="about-me" class="page-content reveal">
+    <h2 class="typing-text" style="font-size: 32px; font-weight: 800; margin-bottom: 20px;">Tentang Saya</h2>
+    
+    <div class="card" style="padding: 30px; margin-bottom: 30px; line-height: 1.8; color: var(--gray);">
+        <p>
+            Halo, saya <strong>Dimas</strong>, seorang programer dan <em>Bug Hunter</em> yang berdedikasi normal. 
+            Saya mulai perjalanan di dunia IT dengan blajar otodidak dari youtub dan mencari guru untuk mengajari saya. 
+            Fokus saya adalah memberikan solusi, aman tentram, dan efisien bagi para lammer😹. 
+            Gue percaya bahwa dunia it itu sangat penting di masa depan dan saya mulai belajar dari 2023.
+        </p>
+        <p style="margin-top: 15px;">
+            Selain itu, saya juga aktif dalam deface pada website dan selalu meretas dengan mencari celah terbaru untuk memastikan setiap keamanan website apakah memiliki celah yang mengakibatkan kebocoran data.
+        </p>
+    </div>
+    <section id="skills" class="page-content reveal">
+    <h2 class="typing-text" style="font-size: 32px; font-weight: 800; margin-bottom: 30px;">Keahlian </h2>
+    
+    <div class="card" style="padding: 30px;">
+        <div style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span><i class="fas fa-terminal"></i> Termux</span>
+                <span style="font-weight:bold;">95%</span>
+            </div>
+            <div style="background:#eee; height:8px; border-radius:10px; overflow:hidden;">
+                <div style="background:var(--primary); height:100%; width:95%; border-radius:10px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span><i class="fab fa-node-js"></i> Node.js Server</span>
+                <span style="font-weight:bold;">90%</span>
+            </div>
+            <div style="background:#eee; height:8px; border-radius:10px; overflow:hidden;">
+                <div style="background:var(--secondary); height:100%; width:90%; border-radius:10px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span><i class="fab fa-python"></i> Python</span>
+                <span style="font-weight:bold;">85%</span>
+            </div>
+            <div style="background:#eee; height:8px; border-radius:10px; overflow:hidden;">
+                <div style="background:#3776AB; height:100%; width:85%; border-radius:10px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span><i class="fas fa-bug"></i> Bug Hunting</span>
+                <span style="font-weight:bold;">98%</span>
+            </div>
+            <div style="background:#eee; height:8px; border-radius:10px; overflow:hidden;">
+                <div style="background:#e74c3c; height:100%; width:98%; border-radius:10px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span><i class="fab fa-html5"></i> Web Frontend</span>
+                <span style="font-weight:bold;">80%</span>
+            </div>
+            <div style="background:#eee; height:8px; border-radius:10px; overflow:hidden;">
+                <div style="background:#E34F26; height:100%; width:80%; border-radius:10px;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="contact" class="page-content reveal">
+    <div class="card" style="padding: 40px; text-align: center;">
+        <h2 class="typing-text" style="font-size: 28px; margin-bottom: 15px;">🔍 Nemu Bug di Web saya?</h2>
+        <p style="color: var(--gray); margin-bottom: 30px;">
+            langsung laporkan saja. <br>
+            Laporkan bug yang valid dan dapatkan apresiasi dari saya!
+        </p>
+
+        <form id="reportForm" style="max-width: 500px; margin: 0 auto; text-align: left;">
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-weight:600; margin-bottom:5px;">Nama</label>
+                <input type="text" id="senderName" placeholder="Masukkan nama lo" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display:block; font-weight:600; margin-bottom:5px;">laporan Bug</label>
+                <textarea id="bugDesc" placeholder="Jelaskan bug yang lo temuin..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; height:100px;"></textarea>
+            </div>
+            <button type="button" onclick="sendReport()" class="btn btn-main" style="width:100%; cursor:pointer;">Kirim Laporan via Email</button>
+        </form>
+
+        <div style="margin-top: 50px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <a href="https://wa.me/62895404399397" style="color: #25D366; font-size: 24px;"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://t.me/destrooit" style="color: #0088cc; font-size: 24px;"><i class="fab fa-telegram"></i></a>
+            <a href="https://instagram.com/tn.xstro404" style="color: #E1306C; font-size: 24px;"><i class="fab fa-instagram"></i></a>
+            <a href="https://tiktok.com/@mas_destro" style="color: #000; font-size: 24px;"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <div style="margin-top:20px;">
+            <a href="https://saweria.co/Dimasdestro" class="btn" style="background:#f1c40f; color:white; padding:10px 20px; border-radius:8px;">Donate & Support</a>
+        </div>
+    </div>
+</section>
+
+
+
+    </main>
+
+    <footer style="padding: 50px 5%; text-align: center; border-top: 1px solid #eee; margin-top: 100px;">
+        <p style="color: var(--gray); font-size: 14px;">&copy; 2026 DESTRO CORE. Developed by Mas Dimas.</p>
+    </footer>
+
+    <script>        // 1. Fungsi Toggle Sidebar (Mobile)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            const overlay = document.querySelector('.overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // 2. Fungsi Navigator (Smooth Scroll ke Section)
+        // Fungsi ini ngegantiin sistem 'Hide/Show' lo yang lama
+        function showPage(pageId) {
+            const targetElement = document.getElementById(pageId);
+            if (targetElement) {
+                // Kita kasih jarak 80px biar gak kepotong header pas mendarat
+                const headerOffset = 80; 
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+
+            // Tutup sidebar otomatis kalau di HP
+            if (window.innerWidth < 992) {
+                const sidebar = document.getElementById('mainSidebar');
+                const overlay = document.querySelector('.overlay');
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+
+        // 3. Logika Scroll Spy & Reveal Animation
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.page-content');
+            const navLinks = document.querySelectorAll('.sidebar-menu a');
+            const header = document.querySelector('header');
+            
+            // Efek Bayangan Header saat di-scroll
+            if(window.scrollY > 50) {
+                header.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)";
+                header.style.background = "var(--white)";
+            } else {
+                header.style.boxShadow = "none";
+                header.style.background = "var(--glass)";
+            }
+
+            // SCROLL SPY: Deteksi posisi buat nyalain menu sidebar
+            let currentSection = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                // Cocokin id menu (nav-dashboard) sama section yang lagi dilihat
+                if (link.id === 'nav-' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+
+            // REVEAL ANIMATION: Munculin elemen pas kena scroll
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const revealTop = el.getBoundingClientRect().top;
+                const revealPoint = 100;
+
+                if (revealTop < windowHeight - revealPoint) {
+                    el.classList.add('active');
+                }
+            });
+        });
+
+        // 4. Inisialisasi awal pas web dibuka
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("=========================================");
+            console.log("   DESTRO CORE ENGINE v1.0 READY         ");
+            console.log("   Status: One-Page Scrolling Active     ");
+            console.log("=========================================");
+            
+            // Jalankan fungsi scroll sekali pas load buat ngecek posisi
+            const event = new Event('scroll');
+            window.dispatchEvent(event);
+        });
+        function openLightbox(src) {
+    const lightbox = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    lightbox.style.display = 'flex';
+}function sendReport() {
+    const name = document.getElementById('senderName').value;
+    const desc = document.getElementById('bugDesc').value;
+    const email = "dedisurakhman234@gmail.com";
+    
+    if(name === "" || desc === "") {
+        alert("Isi dulu nama sama deskripsi bug-nya, Master!");
+        return;
+    }
+
+    const subject = "Bug Report dari: " + name;
+    const body = "Halo Mas Dimas,%0D%0A%0D%0ASaya menemukan bug:%0D%0A" + desc + "%0D%0A%0D%0ATerima kasih.";
+    
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+}
+function toggleTheme() {
+    const body = document.body;
+    const icon = document.getElementById('theme-icon');
+    
+    // Toggle class dark-mode
+    body.classList.toggle('dark-mode');
+    
+    // Simpan preferensi user
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        icon.classList.replace('fa-moon', 'fa-sun'); // Ganti icon jadi matahari
+    } else {
+        localStorage.setItem('theme', 'light');
+        icon.classList.replace('fa-sun', 'fa-moon'); // Ganti icon jadi bulan
+    }
+}
+
+// Update juga fungsi DOMContentLoaded di bawah biar icon-nya pas pas direfresh
+document.addEventListener('DOMContentLoaded', () => {
+    // ... kode yang udah ada ...
+    
+    // Cek tema yang kesimpen
+    const savedTheme = localStorage.getItem('theme');
+    const icon = document.getElementById('theme-icon');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        icon.classList.replace('fa-moon', 'fa-sun');
+    }
+});
+    </script>
+</body>
+</html>
